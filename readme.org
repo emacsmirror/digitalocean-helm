@@ -4,29 +4,29 @@
 * Introduction
 
 Emacs library for working with digitialocean, if you don't have a digitalocean account consider creating one 
-using this referal link for a perk for bot of us.
+using this referal link for a perk for both of us.
 
-[https://m.do.co/c/f05b87f9fec9]
+[[https://m.do.co/c/f05b87f9fec9]]
 
-This was written to help me learn some lisp, the code is hopefulyl quite easy to follow as I am not an expert in lisp.
+This plugin is built on top of a digitalocean api wrapper and requires it to show results. 
 
 * API Access Setup
 First create a token on digitalocean, once created copy the token and set the =digitalocean-token= variable examples below.
 
 #+BEGIN_SRC emacs-lisp
-(setq digitalocean-token (concat "Bearer " "you digitalocean token here."))
+(setq digitalocean-token "you digitalocean token here.")
 #+END_SRC
 
 It is recommended you use a secure way of storing this, something like the below
 which uses the unix password store https://www.passwordstore.org/ plugin for emacs, but there are other options.
 #+BEGIN_SRC emacs-lisp
-(setq digitalocean-token (concat "Bearer " (password-store-get "token/digitalocean")))
+(setq digitalocean-token (password-store-get "token/digitalocean"))
 #+END_SRC
 
 * Getting started
-All commands are prefixed do/ and are not bound to any keys this is left to the user.
+All commands are prefixed digitalocean-helm- and are not bound to any keys this is left to the user.
 You will probably want to bind at least these functions.
 
-(do/create-droplet-form)
+(digitalocean-helm-droplets)
 
-(do/helm-digitalocean-droplets)
+** Preview
