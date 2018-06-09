@@ -24,61 +24,56 @@
 
 ;;; Commentary:
 
-;; This provides a set of magit style popups for interacting with your containers.
-;; It wraps docker and docker-compose commands and allows you to select containers and toggle
-;; the various paramters passed to the commands.
-
-;; It can be extended to run tests inside containers and comes with some predefined setups, it
-;; should also be easy to add in your own common commands to the interactive popups
+;; Digitalocean api extension that lets you select a droplet with helm and run actions against the selected droplet 
 
 ;;; Code:
 
 (defvar digitalocean-helm-droplet-source
   ;; Helm droplet list and actions
   '((name . "Digitalocean Droplets")
-    (candidates . do/digitalocean-droplet-list)
+    (candidates . digitalocean-droplet-list)
     (action . (("Open Shell" .
 		(lambda (candidate)
-		  (do/launch-shell
-		   (do/get-droplet-name-from-candidate candidate)
-                   (do/build-ssh-path candidate "~/"))))
+		  (digitalocean-launch-shell
+		   (digitalocean-get-droplet-name-from-candidate candidate)
+                   (digitalocean-build-ssh-path candidate "~/"))))
 	       ("Snapshot" .
 		(lambda (candidate)
-		  (do/exec-droplet-action
-		   (do/get-droplet-id-from-candidate candidate)
+		  (digitalocean-exec-droplet-action
+		   (digitalocean-get-droplet-id-from-candidate candidate)
                    "snapshot")))
 	       ("Power Off" .
 		(lambda (candidate)
-		  (do/exec-droplet-action
-		   (do/get-droplet-id-from-candidate candidate)
+		  (digitalocean-exec-droplet-action
+		   (digitalocean-get-droplet-id-from-candidate candidate)
                    "power_off")))
 	       ("Power On" .
 		(lambda (candidate)
-		  (do/exec-droplet-action
-		   (do/get-droplet-id-from-candidate candidate)
+		  (digitalocean-exec-droplet-action
+		   (digitalocean-get-droplet-id-from-candidate candidate)
                    "power_on")))
 	       ("Restart" .
 		(lambda (candidate)
-		  (do/exec-droplet-action
-		   (do/get-droplet-id-from-candidate candidate)
+		  (digitalocean-exec-droplet-action
+		   (digitalocean-get-droplet-id-from-candidate candidate)
                    "restart")))
 	       ("Destroy" .
 		(lambda (candidate)
-		  (do/exec-droplet-action
-		   (do/get-droplet-id-from-candidate candidate)
+		  (digitalocean-exec-droplet-action
+		   (digitalocean-get-droplet-id-from-candidate candidate)
                    "destroy")))))))
 
 ;;;autoload
 (defun digitalocean-helm-droplets ()
   "Show helm droplet list."
   (interactive)
-  (helm :sources '(helm-digitalocean-droplet-source)))
+  (helm :sources '(digitalocean-helm-droplet-source)))
 
 
 (defvar digitalocean-helm-image-source
   ;; Helm image list and actions
   '((name . "Digitalocean Images")
-    (candidates . digitalocean-helm-digitalocean-images-list)
+    (candidates . digitalocean-images-list)
     (action . (("Test" . (lambda (candidate)
 			   (message-box
 			    "selected: %s"
@@ -88,12 +83,12 @@
 (defun digitalocean-helm-images ()
   "Show helm image list."
   (interactive)
-  (helm :sources '(helm-digitalocean-image-source)))
+  (helm :sources '(digitalocean-helm-image-source)))
 
 (defvar digitalocean-helm-region-source
   ;; Helm region list and actioons
   '((name . "Digitalocean Regions")
-    (candidates . digitalocean-helm-digitalocean-regions-list)
+    (candidates . digitalocean-regions-list)
     (action . (("Test" . (lambda (candidate)
 			   (message-box
 			    "selected: %s"
@@ -103,7 +98,7 @@
 (defun digitalocean-helm-regions ()
   "Show helm region list."
   (interactive)
-  (helm :sources '(helm-digitalocean-region-source)))
+  (helm :sources '(digitalocean-helm-region-source)))
 
 
 (defun digitalocean-helm-build-ssh-path (candidate dir)
